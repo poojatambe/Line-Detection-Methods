@@ -1,0 +1,5 @@
+opencv_python==4.8.1.78
+opencv_python_headless==4.8.1.78
+pylsd_nova==1.2.1
+tensorflow==2.13.0
+
