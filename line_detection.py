@@ -27,6 +27,7 @@ class LineDetectMethods:
             y2 = int(y0 - 1000*(a))
             cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 1)
         cv2.imwrite('hough_line.jpg', img)
+        return img
 
     def hough_linep_detect(self):
         img = cv2.imread(self.image_path)
@@ -38,6 +39,7 @@ class LineDetectMethods:
             [x1, y1, x2, y2] = line[0]
             cv2.line(img, (x1, y1), (x2, y2), (0, 0, 255), 1)
         cv2.imwrite('hough_linep.jpg', img)
+        return img
 
     def masked_line_detect(self):
         img = cv2.imread(self.image_path)
@@ -77,6 +79,10 @@ class LineDetectMethods:
         cv2.imwrite('slant_lines.jpg', oblique_plus_45_filtered_image)
         cv2.imwrite('slant_lines1.jpg', oblique_minus_45_filtered_image)
         cv2.imwrite('vertical_lines.jpg', vertical_filtered_image)
+        out = np.hstack([horizontal_filtered_image, vertical_filtered_image,
+                        oblique_plus_45_filtered_image,
+                        oblique_minus_45_filtered_image])
+        return out
 
     def lsd_detect(self):
         img = cv2.imread(self.image_path)
@@ -88,6 +94,7 @@ class LineDetectMethods:
             width = segments[i, 4]
             cv2.line(img, pt1, pt2, (0, 0, 255), int(np.ceil(width / 2)))
         cv2.imwrite('pylsd_output.jpg', img)
+        return img
 
     def opencv_lsd_detect(self):
         img = cv2.imread(self.image_path)
@@ -98,6 +105,7 @@ class LineDetectMethods:
         cv2.imwrite('opencv_lsd_output.jpg', drawn_img)
         # cv2.imshow("LSD", drawn_img )
         # cv2.waitKey(0)
+        return drawn_img
 
     def mlsd_detect(self):
         from mlsd.utils import pred_lines
@@ -121,6 +129,7 @@ class LineDetectMethods:
         cv2.imwrite('mlsd_output.jpg', img)
         # cv2.imshow('out', img)
         # cv2.waitKey(0)
+        return img
 
 
 if __name__ == "__main__":
@@ -132,16 +141,16 @@ if __name__ == "__main__":
     opt = parser.parse_args()
     detect = LineDetectMethods(opt.image)
     if opt.method == 'Hough transform':
-        detect.hough_line_detect()
+        out_img = detect.hough_line_detect()
     elif opt.method == 'Probabilistic Hough transform':
-        detect.hough_linep_detect()
+        out_img = detect.hough_linep_detect()
     elif opt.method == 'Convolution Mask':
-        detect.masked_line_detect()
+        out_img = detect.masked_line_detect()
     elif opt.method == 'pylsd':
-        detect.lsd_detect()
+        out_img = detect.lsd_detect()
     elif opt.method == 'OpenCV LSD':
-        detect.opencv_lsd_detect()
+        out_img = detect.opencv_lsd_detect()
     elif opt.method == 'MLSD':
-        detect.mlsd_detect()
+        out_img = detect.mlsd_detect()
     else:
         print('Specify correct method.')

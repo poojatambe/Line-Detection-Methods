@@ -20,6 +20,13 @@ For method_name, refer above methods.
 ```
 This command will run line detection on sample image using hough transform.
 
+![Alt text](image.png)
+
+Run the demo.
+```
+python demo.py
+```
+
 ## Requirements:
 ```
 !pip install -r requirements.txt
